@@ -3,9 +3,18 @@ import pandas as pd
 import treasury_gov_pandas
 import streamlit as st
 
+st.set_page_config(layout='wide')
+
 url = 'https://api.fiscaldata.treasury.gov/services/api/fiscal_service/v1/accounting/dts/deposits_withdrawals_operating_cash'
 
-df = treasury_gov_pandas.load_records(url = url)
+@st.cache_data
+def get_dataframe():
+    return treasury_gov_pandas.load_records(url = url)
+
+# df = treasury_gov_pandas.load_records(url = url)
+
+
+df = get_dataframe()
 
 df['record_date'] = pd.to_datetime(df['record_date'])
 
@@ -36,10 +45,18 @@ most_recent_date = df['record_date'].max()
 
 date = st.date_input('Select a date', value = most_recent_date)
 
-'### Deposits'
+col_1, col_2 =st.columns(2)
 
-st.dataframe(get_rows_for_date_and_type(df, date, 'Deposits'), hide_index=True)
+col_1.write('### Deposits')
 
-'### Withdrawals'
+# st.dataframe(get_rows_for_date_and_type(df, date, 'Deposits'), hide_index=True)
 
-st.dataframe(get_rows_for_date_and_type(df, date, 'Withdrawals'), hide_index=True)
+col_1.dataframe(get_rows_for_date_and_type(df, date, 'Deposits'), hide_index=True)
+
+col_2.write('### Withdrawals')
+
+# st.dataframe(get_rows_for_date_and_type(df, date, 'Withdrawals'), hide_index=True)
+
+col_2.dataframe(get_rows_for_date_and_type(df, date, 'Withdrawals'), hide_index=True)
+
+st.button('Clear cache', on_click=get_dataframe.clear)
