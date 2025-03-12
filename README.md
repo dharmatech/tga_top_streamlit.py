@@ -6,3 +6,7 @@
 ### TGA spending for FY 2024:
 
 https://x.com/dharmatrade/status/1885180290148319479
+
+### Federal Salaries
+
+https://x.com/dharmatrade/status/1899817533030736008
